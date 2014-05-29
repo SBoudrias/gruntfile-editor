@@ -35,6 +35,19 @@ GruntfileEditor.prototype.insertConfig = function (name, config) {
 };
 
 /**
+ * Load a Grunt plugin
+ * @param {String}               pluginName - name of the plugin to load (ex: 'grunt-contrib-uglify')
+ * @return {this}
+ */
+
+GruntfileEditor.prototype.loadNpmTasks = function (pluginName) {
+  this.gruntfile.assignment('module.exports').value().body.prepend(
+    'grunt.loadNpmTasks("' + pluginName + '");'
+  );
+  return this;
+};
+
+/**
  * Register a task inside a named task group
  * @param {String}               name  - Task group name
  * @param {String|Array[String]} tasks - Tasks name to insert in the group
