@@ -35,6 +35,19 @@ describe('GruntfileEditor', function () {
     });
   });
 
+  describe('#loadNpmTask()', function () {
+
+    it('insert task plugin load if not existing', function () {
+      this.editor.loadNpmTasks('grunt-contrib-concat');
+      assert(this.editor.gruntfile.toString().indexOf('grunt.loadNpmTasks(\'grunt-contrib-concat\')') >= 0);
+    });
+
+    it('is chainable', function () {
+      assert.equal(this.editor.loadNpmTasks('grunt-contrib-uglify'), this.editor);
+    });
+
+  });
+
   describe('#registerTask()', function () {
     beforeEach(function () {
       this.editor.registerTask('exist', 'bar');
