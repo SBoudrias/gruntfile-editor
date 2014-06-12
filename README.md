@@ -56,6 +56,15 @@ editor.insertVariable('root', '"project/foo"');
 // output: var root = 'project/foo';
 ```
 
+### `editor.loadNpmTasks( pluginName )`
+
+Load a Grunt plugin.
+
+```javascript
+editor.loadNpmTasks('grunt-contrib-uglify');
+// output: grunt.loadNpmTasks("grunt-contrib-uglify");
+```
+
 ### `editor.toString()`
 
 Returns the modified Gruntfile as a string.
