@@ -30,6 +30,18 @@ describe('GruntfileEditor', function () {
       assert(this.editor.gruntfile.toString().indexOf('compass: { yeo: \'man\' }') >= 0);
     });
 
+    it('inserts a variable as the value', function () {
+      this.editor.insertConfig('conf', 'config');
+      assert(this.editor.gruntfile.toString().indexOf('conf: config') >= 0);
+    });
+
+    it('updates a variable as the value', function () {
+      this.editor.insertConfig('conf', 'config');
+      this.editor.insertConfig('conf', 'config2');
+      assert(this.editor.gruntfile.toString().indexOf('conf: config') >= 0);
+      assert(this.editor.gruntfile.toString().indexOf('conf: config2') < 0);
+    });
+
     it('is chainable', function () {
       assert.equal(this.editor.insertConfig('compass', '{}'), this.editor);
     });
