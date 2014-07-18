@@ -89,6 +89,12 @@ GruntfileEditor.prototype.insertVariable = function (name, value) {
   return this;
 };
 
+/**
+ * Return the Gruntfile representation as a string suitable for writing to an
+ * actual `Gruntfile.js`
+ * @return {String} gruntfileContent - The actual `Gruntfile.js` content
+ */
+
 GruntfileEditor.prototype.toString = function () {
   return this.gruntfile.toString();
 };
