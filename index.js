@@ -29,8 +29,12 @@ var GruntfileEditor = module.exports = function (gruntfileContent) {
 GruntfileEditor.prototype.insertConfig = function (name, config) {
   assert(_.isString(name), 'You must provide a task name');
   assert(_.isString(config), 'You must provide a task configuration body as String');
-  this.gruntfile.callExpression('grunt.initConfig').arguments.at(0)
-    .key(name).value(config);
+  var expression = this.gruntfile.callExpression('grunt.initConfig').arguments
+    .at(0).key(name);
+  try {
+    expression.value(config);
+  }
+  catch (e) {}
   return this;
 };
 
