@@ -55,6 +55,9 @@ describe('GruntfileEditor', function () {
     });
 
     describe('#loadNpmTask()', function () {
+      it('require a name', function () {
+        assert.throws(this.editor.loadNpmTasks.bind(this.editor));
+      });
 
       it('insert task plugin load if not existing', function () {
         this.editor.loadNpmTasks('grunt-contrib-concat');
@@ -75,6 +78,14 @@ describe('GruntfileEditor', function () {
     describe('#registerTask()', function () {
       beforeEach(function () {
         this.editor.registerTask('exist', 'bar');
+      });
+
+      it('require a name', function () {
+        assert.throws(this.editor.registerTask.bind(this.editor));
+      });
+
+      it('require a task(s)', function () {
+        assert.throws(this.editor.registerTask.bind(this.editor, 'name'));
       });
 
       it('insert task group if not existing', function () {
@@ -116,6 +127,14 @@ describe('GruntfileEditor', function () {
     });
 
     describe('#insertVariable()', function () {
+      it('require a name', function () {
+        assert.throws(this.editor.insertVariable.bind(this.editor));
+      });
+
+      it('require a variable definition', function () {
+        assert.throws(this.editor.insertVariable.bind(this.editor, 'name'));
+      });
+
       it('insert variable to the top', function () {
         this.editor.insertVariable('paths', '"foo"');
         var file = this.editor.gruntfile.toString();
