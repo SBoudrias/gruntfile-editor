@@ -46,6 +46,7 @@ GruntfileEditor.prototype.insertConfig = function (name, config) {
  */
 
 GruntfileEditor.prototype.loadNpmTasks = function (pluginName) {
+  assert(_.isString(pluginName), 'You must provide a plugin name');
   this.gruntfile.assignment('module.exports').value().body.prepend(
     'grunt.loadNpmTasks("' + pluginName + '");'
   );
@@ -60,6 +61,8 @@ GruntfileEditor.prototype.loadNpmTasks = function (pluginName) {
  */
 
 GruntfileEditor.prototype.registerTask = function (name, tasks) {
+  assert(_.isString(name), 'You must provide a task group name');
+  assert(tasks, 'You must provide a task or an array of tasks');
   var current = this.gruntfile.callExpression('grunt.registerTask')
     .filter(function (node) {
       return node.arguments[0].value === name;
@@ -85,6 +88,8 @@ GruntfileEditor.prototype.registerTask = function (name, tasks) {
  */
 
 GruntfileEditor.prototype.insertVariable = function (name, value) {
+  assert(_.isString(name), 'You must provide a variable name');
+  assert(_.isString(value), 'You must provide a variable value');
   var current = this.gruntfile.var(name);
   if (current.length) {
     current.value(value);
