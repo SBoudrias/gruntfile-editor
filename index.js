@@ -29,9 +29,11 @@ var GruntfileEditor = module.exports = function (gruntfileContent) {
  */
 
 GruntfileEditor.prototype.insertConfig = function (name, config) {
-  assert(_.isString(name), 'You must provide a task name');
+  name = _.isString(name) && name.trim() ? name : false;
+  config = _.isString(config) && config.trim() ? config : false;
+  assert(name, 'You must provide a task name');
   assert(
-    _.isString(config),
+    config && _.isString(config),
     'You must provide a task configuration body as a String'
   );
   this.gruntfile.callExpression('grunt.initConfig').arguments.at(0)
@@ -46,7 +48,9 @@ GruntfileEditor.prototype.insertConfig = function (name, config) {
  */
 
 GruntfileEditor.prototype.loadNpmTasks = function (pluginName) {
-  assert(_.isString(pluginName), 'You must provide a plugin name');
+  var name = _.isString(pluginName) && pluginName.trim() ?
+    pluginName : false;
+  assert(name, 'You must provide a plugin name');
   this.gruntfile.assignment('module.exports').value().body.prepend(
     'grunt.loadNpmTasks("' + pluginName + '");'
   );
@@ -57,24 +61,46 @@ GruntfileEditor.prototype.loadNpmTasks = function (pluginName) {
  * Register a task inside a named task group
  * @param {String} name  - Task group name
  * @param {String|Array[String]} tasks - Tasks name to insert in the group
+ * @param {Boolean} multiple - Allows the same task(s) to be run multiple times
  * @return {this}
  */
 
-GruntfileEditor.prototype.registerTask = function (name, tasks) {
-  assert(_.isString(name), 'You must provide a task group name');
+GruntfileEditor.prototype.registerTask = function (name, tasks, multiple) {
+  name = _.isString(name) && name.trim() ? name : false;
+  assert(name, 'You must provide a task group name');
+
+  if (_.isString(tasks)) {
+    tasks = tasks.trim() || false;
+  }
+  if (_.isArray(tasks)) {
+    tasks = tasks.length > 0 && tasks || false;
+  }
+  if (!(_.isString(tasks) || _.isArray(tasks))) {
+    tasks = false;
+  }
   assert(tasks, 'You must provide a task or an array of tasks');
+
   var current = this.gruntfile.callExpression('grunt.registerTask')
     .filter(function (node) {
       return node.arguments[0].value === name;
     });
-  tasks = _.isArray(tasks) ? tasks : [tasks];
+  tasks = _.isArray(tasks) ? tasks : tasks.replace(/ /g, '').split(',');
+
   if (!current.length) {
     this.gruntfile.assignment('module.exports').value().body.append(
       'grunt.registerTask("' + name + '", ["' + tasks.join('","') + '"])'
     );
-  } else {
+  }
+  else {
+    var argList = current.arguments.at(1);
+    var currentTasks = argList.nodes[0].map(function (list) {
+      return list.value;
+    });
+
     tasks.forEach(function (task) {
-      current.arguments.at(1).push('"' + task + '"');
+      if (currentTasks.indexOf(task) === -1 || multiple) {
+        argList.push('"' + task + '"');
+      }
     });
   }
   return this;
@@ -83,13 +109,17 @@ GruntfileEditor.prototype.registerTask = function (name, tasks) {
 /**
  * Add a variable declaration to the Gruntfile
  * @param {String} name  - Variable name
- * @param {String} value
+ * @param {String} value - Variable valuechange6pw
+ *
  * @return {this}
  */
 
 GruntfileEditor.prototype.insertVariable = function (name, value) {
-  assert(_.isString(name), 'You must provide a variable name');
-  assert(_.isString(value), 'You must provide a variable value');
+  name = _.isString(name) && name.trim() ? name : false;
+  assert(name, 'You must provide a variable name');
+  value = _.isString(value) && value.trim() ? value : false;
+  assert(value, 'You must provide a variable value as a String');
+
   var current = this.gruntfile.var(name);
   if (current.length) {
     current.value(value);
