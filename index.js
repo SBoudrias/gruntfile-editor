@@ -61,24 +61,46 @@ GruntfileEditor.prototype.loadNpmTasks = function (pluginName) {
  * Register a task inside a named task group
  * @param {String} name  - Task group name
  * @param {String|Array[String]} tasks - Tasks name to insert in the group
+ * @param {Boolean} multiple - Allows the same task(s) to be run multiple times
  * @return {this}
  */
 
-GruntfileEditor.prototype.registerTask = function (name, tasks) {
-  assert(_.isString(name), 'You must provide a task group name');
+GruntfileEditor.prototype.registerTask = function (name, tasks, multiple) {
+  name = _.isString(name) && name.trim() ? name : false;
+  assert(name, 'You must provide a task group name');
+
+  if (_.isString(tasks)) {
+    tasks = tasks.trim() || false;
+  }
+  if (_.isArray(tasks)) {
+    tasks = tasks.length > 0 && tasks || false;
+  }
+  if (!(_.isString(tasks) || _.isArray(tasks))) {
+    tasks = false;
+  }
   assert(tasks, 'You must provide a task or an array of tasks');
+
   var current = this.gruntfile.callExpression('grunt.registerTask')
     .filter(function (node) {
       return node.arguments[0].value === name;
     });
-  tasks = _.isArray(tasks) ? tasks : [tasks];
+  tasks = _.isArray(tasks) ? tasks : tasks.replace(/ /g, '').split(',');
+
   if (!current.length) {
     this.gruntfile.assignment('module.exports').value().body.append(
       'grunt.registerTask("' + name + '", ["' + tasks.join('","') + '"])'
     );
-  } else {
+  }
+  else {
+    var argList = current.arguments.at(1);
+    var currentTasks = argList.nodes[0].map(function (list) {
+      return list.value;
+    });
+
     tasks.forEach(function (task) {
-      current.arguments.at(1).push('"' + task + '"');
+      if (currentTasks.indexOf(task) === -1 || multiple) {
+        argList.push('"' + task + '"');
+      }
     });
   }
   return this;
