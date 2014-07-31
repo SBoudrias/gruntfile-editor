@@ -29,11 +29,10 @@ var GruntfileEditor = module.exports = function (gruntfileContent) {
  */
 
 GruntfileEditor.prototype.insertConfig = function (name, config) {
-  assert(_.isString(name), 'You must provide a task name');
-  assert(
-    _.isString(config),
-    'You must provide a task configuration body as a String'
-  );
+  name = _.isString(name) && name.trim() || false;
+  config = _.isString(config) && config.trim() || false;
+  assert(name, 'You must provide a task name');
+  assert(config, 'You must provide a task configuration body as a String');
   this.gruntfile.callExpression('grunt.initConfig').arguments.at(0)
     .key(name).value(config);
   return this;
@@ -46,7 +45,8 @@ GruntfileEditor.prototype.insertConfig = function (name, config) {
  */
 
 GruntfileEditor.prototype.loadNpmTasks = function (pluginName) {
-  assert(_.isString(pluginName), 'You must provide a plugin name');
+  pluginName = _.isString(pluginName) && pluginName.trim() || false;
+  assert(pluginName, 'You must provide a plugin name');
   this.gruntfile.assignment('module.exports').value().body.prepend(
     'grunt.loadNpmTasks("' + pluginName + '");'
   );
@@ -83,13 +83,17 @@ GruntfileEditor.prototype.registerTask = function (name, tasks) {
 /**
  * Add a variable declaration to the Gruntfile
  * @param {String} name  - Variable name
- * @param {String} value
+ * @param {String} value - Variable value
+ *
  * @return {this}
  */
 
 GruntfileEditor.prototype.insertVariable = function (name, value) {
-  assert(_.isString(name), 'You must provide a variable name');
-  assert(_.isString(value), 'You must provide a variable value');
+  name = _.isString(name) && name.trim() || false;
+  assert(name, 'You must provide a variable name');
+  value = _.isString(value) && value.trim() || false;
+  assert(value, 'You must provide a variable value as a String');
+
   var current = this.gruntfile.var(name);
   if (current.length) {
     current.value(value);
