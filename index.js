@@ -55,28 +55,63 @@ GruntfileEditor.prototype.loadNpmTasks = function (pluginName) {
 
 /**
  * Register a task inside a named task group
+ *
+ * Can optionally take an object to specify options:
+ *  * duplicates (false): Allow the same task to be inserted multiple times
+ *
  * @param {String} name  - Task group name
  * @param {String|Array[String]} tasks - Tasks name to insert in the group
+ * @param {Object} options - An optional object to specify options
  * @return {this}
  */
 
-GruntfileEditor.prototype.registerTask = function (name, tasks) {
-  assert(_.isString(name), 'You must provide a task group name');
+GruntfileEditor.prototype.registerTask = function (name, tasks, options) {
+  name = _.isString(name) && name.trim() ? name : false;
+  assert(name, 'You must provide a task group name');
+
+  if (_.isString(tasks)) {
+    tasks = tasks.trim() || false;
+  }
+  if (_.isArray(tasks)) {
+    tasks = tasks.length > 0 && tasks || false;
+  }
+  if (!(_.isString(tasks) || _.isArray(tasks))) {
+    tasks = false;
+  }
   assert(tasks, 'You must provide a task or an array of tasks');
+
+  if (options != null && !_.isPlainObject(options)) {
+    assert(false, 'If you provide options, they must be as an Object');
+  }
+
+  options = _.merge({
+    duplicates: false
+  }, options);
+
   var current = this.gruntfile.callExpression('grunt.registerTask')
     .filter(function (node) {
       return node.arguments[0].value === name;
     });
-  tasks = _.isArray(tasks) ? tasks : [tasks];
+  tasks = _.isArray(tasks) ? tasks : tasks.replace(/ /g, '').split(',');
+
   if (!current.length) {
     this.gruntfile.assignment('module.exports').value().body.append(
       'grunt.registerTask("' + name + '", ["' + tasks.join('","') + '"])'
     );
-  } else {
+  }
+  else {
+    var argList = current.arguments.at(1);
+    var currentTasks = argList.nodes[0].map(function (list) {
+      return list.value;
+    });
+
     tasks.forEach(function (task) {
-      current.arguments.at(1).push('"' + task + '"');
+      if (currentTasks.indexOf(task) === -1 || options.duplicates) {
+        argList.push('"' + task + '"');
+      }
     });
   }
+
   return this;
 };
 
