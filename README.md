@@ -63,7 +63,13 @@ Load a Grunt plugin.
 ```javascript
 editor.loadNpmTasks('grunt-contrib-uglify');
 // output: grunt.loadNpmTasks("grunt-contrib-uglify");
+
+editor.loadNpmTasks(['grunt-contrib-uglify', 'grunt-contrib-concat']);
+// output:
+// grunt.loadNpmTasks("grunt-contrib-concat");
+// grunt.loadNpmTasks("grunt-contrib-uglify");
 ```
+
 
 ### `editor.toString()`
 

@@ -39,17 +39,39 @@ GruntfileEditor.prototype.insertConfig = function (name, config) {
 };
 
 /**
- * Load a Grunt plugin
- * @param {String} pluginName - name of the plugin to load (ex: 'grunt-sass')
+ * Load Grunt plugins
+ * @param {String|Array[String]} pluginNames - String or Array of the plugins to load (ex: "grunt-sass" or ['grunt-sass'])
  * @return {this}
  */
 
 GruntfileEditor.prototype.loadNpmTasks = function (pluginName) {
-  pluginName = _.isString(pluginName) && pluginName.trim() || false;
+
+  if(_.isString(pluginName)){
+    pluginName =  pluginName.trim();
+
+  } else if (_.isArray(pluginName) && pluginName.length){
+    pluginName =  pluginName.filter(function (el) {
+      return _.isString(el) && el.trim().length;
+    });
+    pluginName = pluginName.length && pluginName;
+  } else {
+    pluginName = false;
+  }
+
   assert(pluginName, 'You must provide a plugin name');
-  this.gruntfile.assignment('module.exports').value().body.prepend(
-    'grunt.loadNpmTasks("' + pluginName + '");'
-  );
+
+  [].concat(pluginName)
+    .map(function (el) { return el.trim();})
+    .sort()
+    .filter(function (el, index, array){
+      return array.indexOf(el) === index;
+    })
+    .map(function (el){
+      return 'grunt.loadNpmTasks(\'' + el + '\');';
+    })
+    .forEach(function (el) {
+      this.gruntfile.assignment('module.exports').value().body.prepend(el);
+    }, this);
   return this;
 };
 
