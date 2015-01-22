@@ -4,29 +4,23 @@
   "description": "API to modify the content of a Gruntfile.js file",
   "author": "Simon Boudrias <admin@simonboudrias.com>",
   "license": "MIT",
-  "homepage": "https://github.com/SBoudrias/gruntfile-editor",
   "keywords": [
     "gruntfile",
     "ast"
   ],
-  "main": "index.js",
   "files": [
     "index.js",
-    "default-gruntfile.js",
-    "LICENSE-MIT"
+    "default-gruntfile.js"
   ],
   "scripts": {
     "test": "mocha -R spec"
   },
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/SBoudrias/gruntfile-editor.git"
-  },
-  "bugs": {
-    "url": "https://github.com/SBoudrias/gruntfile-editor/issues"
-  },
+  "repository": "SBoudrias/gruntfile-editor",
   "dependencies": {
-    "ast-query": "~0.2.3",
-    "lodash": "~2.4.1"
+    "ast-query": "^0.3.0",
+    "lodash": "^2.4.1"
+  },
+  "devDependencies": {
+    "mocha": "^2.1.0"
   }
 }
