@@ -21,6 +21,11 @@ module.exports = {
     return this.editor.insertVariable.bind(this.editor, name, value);
   },
 
+  prependJavaScript: function (code) {
+    assert(this.editor.prependJavaScript, 'prependJavaScript' + noDef);
+    return this.editor.prependJavaScript.bind(this.editor, code);
+  },
+
   load: function (plugin) {
     assert(this.editor.loadNpmTasks, 'loadNpmTasks' + noDef);
     return this.editor.loadNpmTasks.bind(this.editor, plugin);

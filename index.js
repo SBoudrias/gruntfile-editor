@@ -155,9 +155,23 @@ GruntfileEditor.prototype.insertVariable = function (name, value) {
   if (current.length) {
     current.value(value);
   } else {
-    this.gruntfile.assignment('module.exports').value().body
-      .prepend('var ' + name + ' = ' + value);
+    this.prependJavaScript('var ' + name + ' = ' + value);
   }
+  return this;
+};
+
+/**
+ * Add arbitrary JavaScript code to the Gruntfile
+ * @param {String} code  - Code to be inserted
+ *
+ * @return {this}
+ */
+GruntfileEditor.prototype.prependJavaScript = function (code) {
+  code = _.isString(code) && code.trim() || false;
+  assert(code, 'You must provide code to be inserted');
+
+  this.gruntfile.assignment('module.exports').value().body.prepend(code);
+
   return this;
 };
 
