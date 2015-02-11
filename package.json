@@ -17,7 +17,7 @@
   },
   "repository": "SBoudrias/gruntfile-editor",
   "dependencies": {
-    "ast-query": "^0.3.0",
+    "ast-query": "0.3.0",
     "lodash": "^2.4.1"
   },
   "devDependencies": {

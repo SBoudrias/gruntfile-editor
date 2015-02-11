@@ -56,6 +56,15 @@ editor.insertVariable('root', '"project/foo"');
 // output: var root = 'project/foo';
 ```
 
+### `editor.prependJavaScript( code )`
+
+Insert a piece of arbritary JavaScript code to the top of the Gruntfile.
+
+```javascript
+editor.prependJavaScript('require(\'load-grunt-tasks\')(grunt);');
+// output: require('load-grunt-tasks')(grunt);
+```
+
 ### `editor.loadNpmTasks( pluginName )`
 
 Load a Grunt plugin.
