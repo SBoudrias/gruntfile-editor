@@ -123,7 +123,7 @@ GruntfileEditor.prototype.registerTask = function (name, tasks, options) {
   }
   else {
     var argList = current.arguments.at(1);
-    var currentTasks = argList.nodes[0].map(function (list) {
+    var currentTasks = argList.nodes[0].elements.map(function (list) {
       return list.value;
     });
 
