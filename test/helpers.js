@@ -31,8 +31,8 @@ module.exports = {
     return this.editor.loadNpmTasks.bind(this.editor, plugin);
   },
 
-  registerTask: function (group, tasks, multi) {
+  registerTask: function (group, desc, tasks, multi) {
     assert(this.editor.registerTask, 'registerTask' + noDef);
-    return this.editor.registerTask.bind(this.editor, group, tasks, multi);
+    return this.editor.registerTask.bind(this.editor, group, desc, tasks, multi);
   },
 };

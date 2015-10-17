@@ -87,9 +87,19 @@ GruntfileEditor.prototype.loadNpmTasks = function (pluginName) {
  * @return {this}
  */
 
-GruntfileEditor.prototype.registerTask = function (name, tasks, options) {
+GruntfileEditor.prototype.registerTask = function (name, desc, tasks, options) {
   name = _.isString(name) && name.trim() ? name : false;
   assert(name, 'You must provide a task group name');
+
+  if (options == null) {
+    if ((tasks == null) || _.isPlainObject(tasks)) {
+      options = tasks;
+      tasks = desc;
+      desc = '';
+    }
+  }
+
+  assert(_.isString(desc), 'The description shall be a string');
 
   if (_.isString(tasks)) {
     tasks = tasks.trim() || false;
@@ -114,15 +124,20 @@ GruntfileEditor.prototype.registerTask = function (name, tasks, options) {
     .filter(function (node) {
       return node.arguments[0].value === name;
     });
+
   tasks = _.isArray(tasks) ? tasks : tasks.replace(/ /g, '').split(',');
 
   if (!current.length) {
+    if (desc.length > 0) {
+      desc = '"' + desc + '", ';
+    }
     this.gruntfile.assignment('module.exports').value().body.append(
-      'grunt.registerTask("' + name + '", ["' + tasks.join('","') + '"])'
+      'grunt.registerTask("' + name + '", ' + desc + '["' + tasks.join('","') + '"])'
     );
   }
   else {
-    var argList = current.arguments.at(1);
+    var argCount = current.arguments.nodes[0].elements.length;
+    var argList = current.arguments.at(argCount - 1);
     var currentTasks = argList.nodes[0].elements.map(function (list) {
       return list.value;
     });
@@ -132,6 +147,14 @@ GruntfileEditor.prototype.registerTask = function (name, tasks, options) {
         argList.push('"' + task + '"');
       }
     });
+
+    if (desc.length > 0) {
+      if (argCount == 2) {
+        // insert a new description element
+        current.arguments.unshift('"' + name + '"');
+      }
+      current.arguments.at(1).value('"' + desc + '"');
+    }
   }
 
   return this;
