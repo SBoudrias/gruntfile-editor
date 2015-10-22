@@ -1,6 +1,6 @@
 {
   "name": "gruntfile-editor",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "API to modify the content of a Gruntfile.js file",
   "author": "Simon Boudrias <admin@simonboudrias.com>",
   "license": "MIT",
