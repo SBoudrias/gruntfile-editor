@@ -60,11 +60,16 @@ GruntfileEditor.prototype.loadNpmTasks = function (pluginName) {
 
   assert(pluginName, 'You must provide a plugin name');
 
+  var currentPlugin = this.gruntfile.callExpression('grunt.loadNpmTasks')
+    .nodes.map(function(node) {
+      return node.arguments[0].value;
+    });
+
   [].concat(pluginName)
     .map(function (el) { return el.trim();})
     .sort()
     .filter(function (el, index, array){
-      return array.indexOf(el) === index;
+      return (array.indexOf(el) === index) && (currentPlugin.indexOf(el) < 0);
     })
     .map(function (el){
       return 'grunt.loadNpmTasks(\'' + el + '\');';
