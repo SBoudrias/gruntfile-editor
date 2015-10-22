@@ -54,6 +54,13 @@ describe('#loadNpmTask()', function () {
 
     it('ignore duplicate loads', function () {
       assert(this.str().indexOf(loadTask) < 0);
+      this.editor.loadNpmTasks('grunt-contrib-concat');
+      this.editor.loadNpmTasks('grunt-contrib-concat');
+      assert(this.str().indexOf(loadTask) === this.str().lastIndexOf(loadTask));
+    });
+
+    it('ignore duplicate loads in array', function () {
+      assert(this.str().indexOf(loadTask) < 0);
       this.editor.loadNpmTasks(['grunt-contrib-concat  ',' grunt-contrib-concat']);
       assert(this.str().indexOf(loadTask) === this.str().lastIndexOf(loadTask));
     });
