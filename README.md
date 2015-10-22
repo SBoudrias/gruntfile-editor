@@ -47,6 +47,13 @@ editor.registerTask('build', ['compass', 'uglify']);
 // output: grunt.registerTask('build', ['compass', 'uglify']);
 ```
 
+You can specify an optional description.
+
+```javascript
+editor.registerTask('build', 'A task description', ['compass', 'uglify']);
+// output: grunt.registerTask('build', 'A task description', ['compass', 'uglify']);
+```
+
 ### `editor.insertVariable( name, value )`
 
 Insert a variable to the top of the Gruntfile.

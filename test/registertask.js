@@ -33,12 +33,48 @@ describe('#registerTask()', function () {
     });
   });
 
+  describe('optional description', function () {
+    var msg = /The description shall be a string/;
+
+    it('as a String', function () {
+      assert(this.register('name', 'desc', 'task'));
+      assert(this.register('name', '    desc   ', 'task'));
+      assert(this.register('name', 'desc', 'task', {}));
+    });
+
+    describe('does not yet accept:', function () {
+      it('an array', function () {
+        assert.throws(this.register('name', [], 'task'), msg);
+        assert.throws(this.register('name', [], 'task', {}), msg);
+      });
+
+      it('an object', function () {
+        assert.throws(this.register('name', {}, 'task'), msg);
+        assert.throws(this.register('name', {}, 'task', {}), msg);
+      });
+
+      it('an integer', function () {
+        assert.throws(this.register('name', 4, 'task'), msg);
+        assert.throws(this.register('name', 4, 'task', {}), msg);
+      });
+
+      it('a boolean', function () {
+        assert.throws(this.register('name', false, 'task'), msg);
+        assert.throws(this.register('name', true, 'task'), msg);
+        assert.throws(this.register('name', false, 'task', {}), msg);
+        assert.throws(this.register('name', true, 'task', {}), msg);
+      });
+    });
+   });
+
   describe('require task(s)', function () {
     var msg = /You must provide a task or an array of tasks/;
 
     it('as a String', function () {
       assert(this.register('name', 'task'));
+      assert(this.register('name', 'desc', 'task'));
       assert(this.register('name', '  task  '));
+      assert(this.register('name', 'desc', '  task  '));
       assert.throws(this.register('name'), msg);
       assert.throws(this.register('name', ''), msg);
       assert.throws(this.register('name', ' '), msg);
@@ -54,6 +90,8 @@ describe('#registerTask()', function () {
     describe('does not yet accept:', function () {
       it('an object', function () {
         assert.throws(this.register('name', {}), msg);
+        assert.throws(this.register('name', {}, {}), msg);
+        assert.throws(this.register('name', 'desc', {}, {}), msg);
       });
 
       it('an integer', function () {
@@ -73,14 +111,18 @@ describe('#registerTask()', function () {
     it('as an object', function () {
       assert(this.register('name', '  task  '));
       assert(this.register('name', 'task', {}));
+      assert(this.register('name', 'desc', 'task', {}));
       assert(this.register('name', 'task', null), msg);
+      assert(this.register('name', 'desc', 'task', null), msg);
       assert(this.register('name', 'task', false), msg);
+      assert(this.register('name', 'desc', 'task', false), msg);
       assert(this.register('name', 'task', { duplicates: true }), msg);
-      assert.throws(this.register('name', 'task', 'options'), msg);
-      assert.throws(this.register('name', 'task', ['options']), msg);
-      assert.throws(this.register('name', 'task', /regex/), msg);
-      assert.throws(this.register('name', 'task', new Number(1)), msg);
-      assert.throws(this.register('name', 'task', function () {
+      assert(this.register('name', 'desc', 'task', { duplicates: true }), msg);
+      assert.throws(this.register('name', 'desc', 'task', 'options'), msg);
+      assert.throws(this.register('name', 'desc', 'task', ['options']), msg);
+      assert.throws(this.register('name', 'desc', 'task', /regex/), msg);
+      assert.throws(this.register('name', 'desc', 'task', new Number(1)), msg);
+      assert.throws(this.register('name', 'desc', 'task', function () {
         return true;
       }), msg);
     });
@@ -133,6 +175,33 @@ describe('#registerTask()', function () {
       });
     });
 
+    describe('a new group with description', function () {
+      it('a single task', function () {
+        gf = 'grunt.registerTask(\'deploy\', \'desc\', [\'foo\'])';
+        assert(this.str().indexOf(gf) < 0);
+        this.editor.registerTask('deploy', 'desc', 'foo');
+        assert(this.str().indexOf(gf) >= 0);
+      });
+
+      it('a single task with empty options', function () {
+        gf = 'grunt.registerTask(\'deploy\', \'desc\', [\'foo\'])';
+        assert(this.str().indexOf(gf) < 0);
+        this.editor.registerTask('deploy', 'desc', 'foo', {});
+        assert(this.str().indexOf(gf) >= 0);
+      });
+
+      it('an array of tasks', function () {
+        gf = 'grunt.registerTask(\'deploy\', \'desc\', [' +
+          '\n        \'foo\',' +
+          '\n        \'bar\',' +
+          '\n        \'baz\'' +
+          '\n    ])';
+        assert(this.str().indexOf(gf) < 0);
+        this.editor.registerTask('deploy', 'desc', ['foo', 'bar', 'baz']);
+        assert(this.str().indexOf(gf) >= 0);
+      });
+    });
+
     describe('an existing group with one item', function () {
       beforeEach(function () {
         gf = 'grunt.registerTask(\'exist\', [\n        \'bar\',';
@@ -152,6 +221,15 @@ describe('#registerTask()', function () {
       it('an array of tasks', function () {
         gf += '\n        \'foo\',\n        \'baz\'\n    ])';
         this.editor.registerTask('exist', ['foo', 'baz']);
+        assert(this.str().indexOf(gf) >= 0);
+      });
+
+      it('a description and a single task', function () {
+        gf = 'grunt.registerTask(\'exist\', \'desc\', [\n' +
+            '        \'bar\',\n' +
+            '        \'foo\'\n' +
+            '    ])';
+        this.editor.registerTask('exist', 'desc', 'foo');
         assert(this.str().indexOf(gf) >= 0);
       });
 
@@ -231,6 +309,45 @@ describe('#registerTask()', function () {
         this.editor.registerTask('deploy', ['foo', 'bar', 'baz'], {
           duplicates: true
         });
+        assert(this.str().indexOf(gf) >= 0);
+      });
+    })
+
+    describe('an existing group with a description and one item', function () {
+      beforeEach(function () {
+        this.editor.registerTask('exist', 'desc', 'bar');
+      });
+
+      it('a single task', function () {
+        gf = 'grunt.registerTask(\'exist\', \'desc\', [\n' +
+          '        \'bar\',\n' +
+          '        \'foo\'\n' +
+          '    ])';
+        this.editor.registerTask('exist', 'foo');
+        assert(this.str().indexOf(gf) >= 0);
+      });
+
+      it('a new description and a single task', function () {
+        gf = 'grunt.registerTask(\'exist\', \'new desc\', [\n' +
+          '        \'bar\',\n' +
+          '        \'foo\'\n' +
+          '    ])';
+        this.editor.registerTask('exist', 'new desc', 'foo');
+        assert(this.str().indexOf(gf) >= 0);
+      });
+
+      it('a new description and an existing task', function () {
+        gf = 'grunt.registerTask(\'exist\', \'new desc\', [\'bar\'])';
+        this.editor.registerTask('exist', 'new desc', 'bar');
+        assert(this.str().indexOf(gf) >= 0);
+      });
+
+      it('a new description and a single task multiple time', function () {
+        gf = 'grunt.registerTask(\'exist\', \'new desc\', [\n' +
+          '        \'bar\',\n' +
+          '        \'bar\'\n' +
+          '    ])';
+        this.editor.registerTask('exist', 'new desc', 'bar', { duplicates: true });
         assert(this.str().indexOf(gf) >= 0);
       });
     })
