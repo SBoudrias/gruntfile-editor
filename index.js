@@ -204,6 +204,20 @@ GruntfileEditor.prototype.prependJavaScript = function (code) {
 };
 
 /**
+ * Add arbitrary JavaScript code at the end of the Gruntfile
+ * @param {String} code  - Code to be inserted
+ *
+ * @return {this}
+ */
+GruntfileEditor.prototype.appendJavaScript = function (code) {
+  code = _.isString(code) && code.trim() || false;
+  assert(code, 'You must provide code to be inserted');
+
+  this.gruntfile.assignment('module.exports').value().body.append(code);
+
+  return this;
+};
+/**
  * Return the Gruntfile representation as a string suitable for writing to an
  * actual `Gruntfile.js`
  * @return {String} gruntfileContent - The actual `Gruntfile.js` content
