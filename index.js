@@ -21,20 +21,31 @@ var GruntfileEditor = module.exports = function (gruntfileContent) {
   this.gruntfile = new Tree(gruntfileContent.toString());
 };
 
-/**
+**
  * Insert a configuration section inside the `Gruntfile.js` initConfig() block
  * @param  {String} name   - Key name of the configuration block
  * @param  {String} config - Configuration content code as a string.
+ * @param  {String} options - additional options
+ *                  {Boolean} keyPath: support child field.
  * @return {this}
  */
 
-GruntfileEditor.prototype.insertConfig = function (name, config) {
+GruntfileEditor.prototype.insertConfig = function (name, config, options) {
   name = _.isString(name) && name.trim() || false;
   config = _.isString(config) && config.trim() || false;
   assert(name, 'You must provide a task name');
   assert(config, 'You must provide a task configuration body as a String');
-  this.gruntfile.callExpression('grunt.initConfig').arguments.at(0)
-    .key(name).value(config);
+  var gConfig = this.gruntfile.callExpression('grunt.initConfig').arguments.at(0)
+  if(options && options.keyPath){
+    // support set config for compress:src2 when already exists config for compress:src1
+    name.split('.').forEach(function(k){
+      gConfig =gConfig.key(k)
+    })
+  }else{
+    gConfig =gConfig.key(name)
+  }
+
+  gConfig.value(config);
   return this;
 };
 
