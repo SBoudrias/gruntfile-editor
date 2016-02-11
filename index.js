@@ -21,7 +21,7 @@ var GruntfileEditor = module.exports = function (gruntfileContent) {
   this.gruntfile = new Tree(gruntfileContent.toString());
 };
 
-**
+/**
  * Insert a configuration section inside the `Gruntfile.js` initConfig() block
  * @param  {String} name   - Key name of the configuration block
  * @param  {String} config - Configuration content code as a string.
