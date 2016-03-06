@@ -89,5 +89,21 @@ describe('#insertConfig()', function () {
       assert(this.str().indexOf(gf) < 0);
       assert(this.str().indexOf(gf.replace('bar', 'baz')) >= 0);
     });
+
+    it('add sub task ', function () {
+      // create first sub task.
+      this.editor.insertConfig('compass', JSON.stringify({
+          src1:{
+            files:['./src1/**']
+          }
+      }));
+      //add another sub task.
+      this.editor.insertConfig('compass.src2', JSON.stringify({
+          files:['./src2/**']
+      }),{keyPath:true});
+
+      assert(this.str().replace(/\s/g,'') == "module.exports=function(grunt){'usestrict';grunt.initConfig({compass:{'src1':{'files':['./src1/**']},src2:{'files':['./src2/**']}}});};");
+
+    });
   });
 });
