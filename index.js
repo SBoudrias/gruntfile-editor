@@ -25,8 +25,8 @@ var GruntfileEditor = module.exports = function (gruntfileContent) {
  * Insert a configuration section inside the `Gruntfile.js` initConfig() block
  * @param  {String} name   - Key name of the configuration block
  * @param  {String} config - Configuration content code as a string.
- * @param  {String} options - additional options
- *                  {Boolean} keyPath: support child field.
+ * @param  {Object} options - additional options
+ * @param  {Boolean} options.keypath - support child field
  * @return {this}
  */
 
