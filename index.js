@@ -126,7 +126,7 @@ GruntfileEditor.prototype.registerTask = function (name, desc, tasks, options) {
     assert(false, 'If you provide options, they must be as an Object');
   }
 
-  options = _.merge({
+  options = _.extend({
     duplicates: false
   }, options);
 
