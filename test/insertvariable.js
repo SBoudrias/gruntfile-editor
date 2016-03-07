@@ -1,4 +1,4 @@
-/*globals describe, it, beforeEach */
+/* globals describe, it, beforeEach */
 'use strict';
 
 var assert = require('assert');
@@ -30,7 +30,7 @@ describe('#insertVariable()', function () {
       assert.throws(this.insert(true), msg);
       assert.throws(this.insert(0), msg);
       assert.throws(this.insert(-1), msg);
-      assert.throws(this.insert([ 'an', 'array' ]), msg);
+      assert.throws(this.insert(['an', 'array']), msg);
     });
   });
 
@@ -59,7 +59,7 @@ describe('#insertVariable()', function () {
       });
 
       it('an array', function () {
-        assert.throws(this.insert('name', [ 5, 'a', { b: 'c' } ]));
+        assert.throws(this.insert('name', [5, 'a', {b: 'c'}]));
         assert.throws(this.insert('name', []), msg);
       });
     });

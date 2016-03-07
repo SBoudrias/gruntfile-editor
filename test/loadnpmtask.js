@@ -1,4 +1,4 @@
-/*globals describe, it, beforeEach, afterEach */
+/* globals describe, it, beforeEach, afterEach */
 'use strict';
 
 var assert = require('assert');
@@ -61,7 +61,7 @@ describe('#loadNpmTask()', function () {
 
     it('ignore duplicate loads in array', function () {
       assert(this.str().indexOf(loadTask) < 0);
-      this.editor.loadNpmTasks(['grunt-contrib-concat  ',' grunt-contrib-concat']);
+      this.editor.loadNpmTasks(['grunt-contrib-concat  ', ' grunt-contrib-concat']);
       assert(this.str().indexOf(loadTask) === this.str().lastIndexOf(loadTask));
     });
   });

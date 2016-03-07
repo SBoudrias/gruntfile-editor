@@ -34,5 +34,5 @@ module.exports = {
   registerTask: function (group, desc, tasks, multi) {
     assert(this.editor.registerTask, 'registerTask' + noDef);
     return this.editor.registerTask.bind(this.editor, group, desc, tasks, multi);
-  },
+  }
 };

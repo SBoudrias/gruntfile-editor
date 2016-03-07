@@ -1,4 +1,4 @@
-/*globals describe, it, beforeEach, afterEach */
+/* globals describe, it, beforeEach, afterEach */
 'use strict';
 
 var assert = require('assert');
@@ -29,7 +29,7 @@ describe('#registerTask()', function () {
       assert.throws(this.register(true), msg);
       assert.throws(this.register(0), msg);
       assert.throws(this.register(-1), msg);
-      assert.throws(this.register([ 'an', 'array' ]), msg);
+      assert.throws(this.register(['an', 'array']), msg);
     });
   });
 
@@ -65,7 +65,7 @@ describe('#registerTask()', function () {
         assert.throws(this.register('name', true, 'task', {}), msg);
       });
     });
-   });
+  });
 
   describe('require task(s)', function () {
     var msg = /You must provide a task or an array of tasks/;
@@ -116,12 +116,12 @@ describe('#registerTask()', function () {
       assert(this.register('name', 'desc', 'task', null), msg);
       assert(this.register('name', 'task', false), msg);
       assert(this.register('name', 'desc', 'task', false), msg);
-      assert(this.register('name', 'task', { duplicates: true }), msg);
-      assert(this.register('name', 'desc', 'task', { duplicates: true }), msg);
+      assert(this.register('name', 'task', {duplicates: true}), msg);
+      assert(this.register('name', 'desc', 'task', {duplicates: true}), msg);
       assert.throws(this.register('name', 'desc', 'task', 'options'), msg);
       assert.throws(this.register('name', 'desc', 'task', ['options']), msg);
       assert.throws(this.register('name', 'desc', 'task', /regex/), msg);
-      assert.throws(this.register('name', 'desc', 'task', new Number(1)), msg);
+      assert.throws(this.register('name', 'desc', 'task', Number(1)), msg);
       assert.throws(this.register('name', 'desc', 'task', function () {
         return true;
       }), msg);
@@ -154,14 +154,14 @@ describe('#registerTask()', function () {
       });
 
       it('an array of tasks', function () {
-        gf +=  '\n    ])';
+        gf += '\n    ])';
         assert(this.str().indexOf(gf) < 0);
         this.editor.registerTask('deploy', ['foo', 'bar', 'baz']);
         assert(this.str().indexOf(gf) >= 0);
       });
 
       it('a csv list of tasks', function () {
-        gf +=  '\n    ])';
+        gf += '\n    ])';
         assert(this.str().indexOf(gf) < 0);
         this.editor.registerTask('deploy', 'foo,bar,baz');
         assert(this.str().indexOf(gf) >= 0);
@@ -243,8 +243,8 @@ describe('#registerTask()', function () {
 
       it('one task multiple times', function () {
         gf += '\n        \'bar\',\n        \'bar\'\n    ])';
-        this.editor.registerTask('exist', 'bar', { duplicates: true });
-        this.editor.registerTask('exist', 'bar', { duplicates: true });
+        this.editor.registerTask('exist', 'bar', {duplicates: true});
+        this.editor.registerTask('exist', 'bar', {duplicates: true});
         assert(this.str().indexOf(gf) >= 0);
       });
     });
@@ -289,8 +289,8 @@ describe('#registerTask()', function () {
         gf += ',\n        \'bar\',' +
           '\n        \'bar\'' +
           '\n    ])';
-        this.editor.registerTask('deploy', 'bar', { duplicates: true });
-        this.editor.registerTask('deploy', 'bar', { duplicates: true });
+        this.editor.registerTask('deploy', 'bar', {duplicates: true});
+        this.editor.registerTask('deploy', 'bar', {duplicates: true});
         assert(this.str().indexOf(gf) >= 0);
       });
 
@@ -311,7 +311,7 @@ describe('#registerTask()', function () {
         });
         assert(this.str().indexOf(gf) >= 0);
       });
-    })
+    });
 
     describe('an existing group with a description and one item', function () {
       beforeEach(function () {
@@ -347,9 +347,9 @@ describe('#registerTask()', function () {
           '        \'bar\',\n' +
           '        \'bar\'\n' +
           '    ])';
-        this.editor.registerTask('exist', 'new desc', 'bar', { duplicates: true });
+        this.editor.registerTask('exist', 'new desc', 'bar', {duplicates: true});
         assert(this.str().indexOf(gf) >= 0);
       });
-    })
+    });
   });
 });

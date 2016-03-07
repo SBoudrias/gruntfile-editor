@@ -1,4 +1,4 @@
-/*globals describe, it, beforeEach */
+/* globals describe, it, beforeEach */
 'use strict';
 
 var assert = require('assert');
@@ -6,7 +6,6 @@ var GruntfileEditor = require('..');
 var helper = require('./helpers');
 
 describe('#prependJavaScript()', function () {
-
   beforeEach(function () {
     this.editor = new GruntfileEditor();
     this.insert = helper.prependJavaScript;
@@ -30,12 +29,11 @@ describe('#prependJavaScript()', function () {
     assert.throws(this.insert(true), msg);
     assert.throws(this.insert(0), msg);
     assert.throws(this.insert(-1), msg);
-    assert.throws(this.insert([ 'an', 'array' ]), msg);
+    assert.throws(this.insert(['an', 'array']), msg);
   });
 
   it('insert require call inside grunt.initConfig', function () {
     this.editor.prependJavaScript('require(\'load-grunt-tasks\')(grunt);');
     assert(this.str().indexOf('require(\'load-grunt-tasks\')(grunt);') >= 0);
   });
-
 });

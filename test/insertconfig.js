@@ -1,4 +1,4 @@
-/*globals describe, it, beforeEach */
+/* globals describe, it, beforeEach */
 'use strict';
 
 var assert = require('assert');
@@ -31,7 +31,7 @@ describe('#insertConfig()', function () {
       assert.throws(this.insert(true), msg);
       assert.throws(this.insert(0), msg);
       assert.throws(this.insert(-1), msg);
-      assert.throws(this.insert([ 'an', 'array' ]), msg);
+      assert.throws(this.insert(['an', 'array']), msg);
     });
   });
 
@@ -61,7 +61,7 @@ describe('#insertConfig()', function () {
       });
 
       it('an array', function () {
-        assert.throws(this.insert('name', [ 5, 'la', { b: 'c' } ]));
+        assert.throws(this.insert('name', [5, 'la', {b: 'c'}]));
         assert.throws(this.insert('name', []), msg);
       });
     });
@@ -98,13 +98,13 @@ describe('#insertConfig()', function () {
         }
       }));
 
-      //add another sub task.
+      // add another sub task.
       this.editor.insertConfig('compass.src2', JSON.stringify({
         files: ['./src2/**']
       }));
 
       assert.equal(
-        this.str().replace(/\s/g,''), "module.exports=function(grunt){'usestrict';grunt.initConfig({compass:{'src1':{'files':['./src1/**']},src2:{'files':['./src2/**']}}});};"
+        this.str().replace(/\s/g, ''), "module.exports=function(grunt){'usestrict';grunt.initConfig({compass:{'src1':{'files':['./src1/**']},src2:{'files':['./src2/**']}}});};"
       );
     });
   });
