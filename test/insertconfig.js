@@ -90,21 +90,23 @@ describe('#insertConfig()', function () {
       assert(this.str().indexOf(gf.replace('bar', 'baz')) >= 0);
     });
 
+  });
+
+  describe('inserts sub task', function () {
+
     it('add sub task ', function () {
-      // create first sub task.
-      this.editor.insertConfig('compass', JSON.stringify({
-        src1: {
-          files: ['./src1/**']
-        }
+      // add first sub task. create parent if not exist.
+      this.editor.insertConfig('compass.src1', JSON.stringify({
+        files:['./src1/**']
       }));
 
-      // add another sub task.
+      //add another sub task.
       this.editor.insertConfig('compass.src2', JSON.stringify({
-        files: ['./src2/**']
+        files:['./src2/**']
       }));
 
       assert.equal(
-        this.str().replace(/\s/g, ''), "module.exports=function(grunt){'usestrict';grunt.initConfig({compass:{'src1':{'files':['./src1/**']},src2:{'files':['./src2/**']}}});};"
+        this.str().replace(/\s/g, ''), "module.exports=function(grunt){'usestrict';grunt.initConfig({compass:{src1:{'files':['./src1/**']},src2:{'files':['./src2/**']}}});};"
       );
     });
   });
