@@ -45,7 +45,9 @@
         2,
         "allow-null"
       ],
-      "no-eq-null": 0
+      "no-eq-null": 0,
+      "no-mixed-operators": 0,
+      "quotes": 0
     }
   }
 }
