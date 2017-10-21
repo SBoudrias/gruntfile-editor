@@ -93,7 +93,7 @@ describe('#insertConfig()', function () {
 
   describe('inserts sub task', function () {
     it('add sub task ', function () {
-      // add first sub task. create parent if not exist.
+      // Add first sub task. create parent if not exist.
       this.editor.insertConfig('compass.src1', JSON.stringify({
         files: ['./src1/**']
       }));
