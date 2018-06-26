@@ -22,7 +22,7 @@
     "lodash": "^4.6.1"
   },
   "devDependencies": {
-    "eslint": "^4.9.0",
+    "eslint": "^5.0.1",
     "eslint-config-xo-space": "^0.17.0",
     "gulp": "^3.9.0",
     "gulp-coveralls": "^0.1.0",
