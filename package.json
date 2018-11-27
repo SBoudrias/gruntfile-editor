@@ -30,7 +30,7 @@
     "gulp-exclude-gitignore": "^1.0.0",
     "gulp-istanbul": "^1.1.1",
     "gulp-nsp": "^2.1.0",
-    "gulp-plumber": "^1.0.0",
+    "gulp-plumber": "1.2.0",
     "mocha": "^4.0.1"
   },
   "eslintConfig": {
